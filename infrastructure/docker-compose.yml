@@ -1,0 +1,44 @@
+# infrastructure/docker-compose.yml
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: llm-rabbitmq
+    ports:
+      - "5672:5672"      # AMQP протокол (для Celery)
+      - "15672:15672"    # Веб-интерфейс управления
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - llm-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: llm-redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - llm-network
+
+volumes:
+  rabbitmq_data:
+  redis_data:
+
+networks:
+  llm-network:
+    driver: bridge
