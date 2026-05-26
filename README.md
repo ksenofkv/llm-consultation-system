@@ -3,6 +3,7 @@
 
 ## Структура проекта
 
+```text
 llm_consultation_system/
 ├── auth_service/
 │   ├── app/
@@ -64,3 +65,5 @@ llm_consultation_system/
     ├── telegram_bot.png
     ├── rabbitmq.png
     └── tests.png
+
+```
