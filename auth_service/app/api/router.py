@@ -1,9 +1,29 @@
-﻿from fastapi import APIRouter
+﻿# auth_service/app/api/router.py
 
-# Создаём общий роутер, к которому будем подключать модульные
-api_router = APIRouter()
+"""
+Главный router Auth Service.
 
-# Пока ничего не подключаем — файл создан, чтобы убрать ошибку импорта
-# Позже добавим:
-# from app.api.routes_auth import router as auth_router
-# api_router.include_router(auth_router, prefix="/auth", tags=["auth"])
+Здесь:
+- собираются все router-ы приложения
+- подключаются endpoint-модули
+- формируется единый API router
+
+Файл НЕ:
+- содержит бизнес-логику
+- выполняет SQL-запросы
+- создаёт FastAPI приложение
+"""
+
+# Главный APIRouter FastAPI
+from fastapi import APIRouter
+
+# Router auth endpoint-ов
+from app.api.routes_auth import router as auth_router
+
+
+# Общий router приложения
+router = APIRouter()
+
+
+# Подключение auth router
+router.include_router(auth_router)
