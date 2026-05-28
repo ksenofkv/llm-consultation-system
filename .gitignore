@@ -1,6 +1,7 @@
 # .gitignore
 
 # Секреты и переменные окружения
+.env
 .env.local
 .env.*.local
 
