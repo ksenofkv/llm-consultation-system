@@ -41,10 +41,8 @@ from app.schemas.user import UserPublic
 
 # Router Auth Service
 router = APIRouter(
-
     # Все endpoint-ы начинаются с /auth
     prefix="/auth",
-
     # Swagger tag
     tags=["Auth"],
 )

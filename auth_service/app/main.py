@@ -1,4 +1,4 @@
-#auth_service/app/main.py
+# auth_service/app/main.py
 
 # Импорт contextmanager для корректного lifecycle FastAPI
 from contextlib import asynccontextmanager
@@ -37,10 +37,8 @@ async def lifespan(app: FastAPI):
 
 # Создание экземпляра FastAPI
 app = FastAPI(
-
     # Название приложения из .env / config
     title=settings.app_name,
-
     # Подключение lifecycle hooks
     lifespan=lifespan,
 )

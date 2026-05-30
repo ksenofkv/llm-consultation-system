@@ -1,4 +1,4 @@
-#auth_service/app/core/config.py
+# auth_service/app/core/config.py
 """
 Файл конфигурации Auth Service.
 
@@ -46,13 +46,10 @@ class Settings(BaseSettings):
 
     # Конфигурация pydantic-settings
     model_config = SettingsConfigDict(
-
         # Файл переменных окружения
         env_file=".env",
-
         # Кодировка файла
         env_file_encoding="utf-8",
-
         # Игнорировать лишние поля
         extra="ignore",
     )

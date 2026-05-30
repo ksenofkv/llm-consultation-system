@@ -49,6 +49,4 @@ class UserPublic(BaseModel):
     created_at: datetime
 
     # Разрешает создание схемы из ORM объекта
-    model_config = ConfigDict(
-        from_attributes=True
-    )
+    model_config = ConfigDict(from_attributes=True)

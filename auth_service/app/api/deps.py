@@ -55,9 +55,7 @@ from app.schemas.user import UserPublic
 
 
 # OAuth2 схема получения Bearer token
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl="/auth/login"
-)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
 
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
@@ -69,7 +67,6 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """
 
     async with AsyncSessionLocal() as session:
-
         yield session
 
 
@@ -106,7 +103,6 @@ async def get_current_user_id(
     """
 
     try:
-
         payload = decode_token(token)
 
         user_id = payload.get("sub")
@@ -117,15 +113,12 @@ async def get_current_user_id(
         return int(user_id)
 
     except ExpiredSignatureError as exc:
-
         raise TokenExpiredError() from exc
 
     except JWTError as exc:
-
         raise InvalidTokenError() from exc
 
     except ValueError as exc:
-
         error_text = str(exc).lower()
 
         if "expired" in error_text:

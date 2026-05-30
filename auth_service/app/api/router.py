@@ -1,4 +1,4 @@
-﻿# auth_service/app/api/router.py
+# auth_service/app/api/router.py
 
 """
 Главный router Auth Service.

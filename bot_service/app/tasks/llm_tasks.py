@@ -65,9 +65,7 @@ async def _process_llm_request(
     - aiogram Bot тоже работает асинхронно
     """
 
-    bot = Bot(
-        token=settings.telegram_bot_token
-    )
+    bot = Bot(token=settings.telegram_bot_token)
 
     try:
         # Запрос к LLM через OpenRouter
@@ -83,10 +81,7 @@ async def _process_llm_request(
         # Сообщение пользователю при ошибке
         await bot.send_message(
             chat_id=tg_chat_id,
-            text=(
-                "Произошла ошибка при обработке LLM-запроса. "
-                "Попробуйте позже."
-            ),
+            text=("Произошла ошибка при обработке LLM-запроса. Попробуйте позже."),
         )
 
         # Пробрасываем ошибку дальше,

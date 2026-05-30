@@ -15,7 +15,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-from app.api.router import router as bot_router
 
 # Общие маршруты (например /health)
 from app.core.config import settings
@@ -38,6 +37,7 @@ app = FastAPI(
     title=settings.app_name,
     lifespan=lifespan,
 )
+
 
 @app.get("/health")
 async def healthcheck():

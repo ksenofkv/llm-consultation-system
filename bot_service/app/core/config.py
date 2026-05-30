@@ -56,36 +56,25 @@ class Settings(BaseSettings):
 
     # RabbitMQ
     # Для docker-compose используем rabbitmq
-    rabbitmq_url: str = (
-        "amqp://guest:guest@rabbitmq:5672//"
-    )
+    rabbitmq_url: str = "amqp://guest:guest@rabbitmq:5672//"
 
     # OpenRouter API
     openrouter_api_key: str = ""
 
-    openrouter_base_url: str = (
-        "https://openrouter.ai/api/v1"
-    )
+    openrouter_base_url: str = "https://openrouter.ai/api/v1"
 
-    openrouter_model: str = (
-        "stepfun/step-3.5-flash:free"
-    )
+    openrouter_model: str = "stepfun/step-3.5-flash:free"
 
-    openrouter_site_url: str = (
-        "https://example.com"
-    )
+    openrouter_site_url: str = "https://example.com"
 
     openrouter_app_name: str = "bot-service"
 
     # Настройки pydantic-settings
     model_config = SettingsConfigDict(
-
         # Путь к .env
         env_file=".env",
-
         # Кодировка
         env_file_encoding="utf-8",
-
         # Игнорировать лишние поля
         extra="ignore",
     )

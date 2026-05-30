@@ -13,7 +13,6 @@ from app.db.base import Base
 from app.db.session import engine
 
 # обязательно импортируем модели
-from app.db import models
 
 
 @pytest_asyncio.fixture(scope="session", autouse=True)

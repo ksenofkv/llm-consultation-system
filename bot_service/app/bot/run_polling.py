@@ -35,6 +35,5 @@ async def main() -> None:
 
 
 if __name__ == "__main__":
-
     # Запуск async приложения
     asyncio.run(main())

@@ -48,7 +48,6 @@ def decode_and_validate(
     """
 
     try:
-
         # Декодирование и проверка JWT
         payload = jwt.decode(
             token,
@@ -64,10 +63,8 @@ def decode_and_validate(
 
     # JWT истёк
     except ExpiredSignatureError as exc:
-
         raise ValueError("Token expired") from exc
 
     # JWT повреждён или подпись неверна
     except JWTError as exc:
-
         raise ValueError("Invalid token") from exc

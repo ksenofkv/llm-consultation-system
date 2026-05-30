@@ -31,10 +31,8 @@ DATABASE_URL = f"sqlite+aiosqlite:///{settings.sqlite_path}"
 
 # Создание асинхронного engine
 engine = create_async_engine(
-
     # Строка подключения
     DATABASE_URL,
-
     # Логирование SQL-запросов
     echo=False,
 )
@@ -42,13 +40,10 @@ engine = create_async_engine(
 
 # Фабрика асинхронных сессий
 AsyncSessionLocal = async_sessionmaker(
-
     # Engine подключения
     bind=engine,
-
     # Класс асинхронной сессии
     class_=AsyncSession,
-
     # Не сбрасывать объекты после commit
     expire_on_commit=False,
 )

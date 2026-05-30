@@ -1,198 +1,54 @@
-# llm-consultation-system
-Микросервисная система для работы с LLM через Telegram-бота с JWT-аутентификацией.
+# LLM Consultation System
 
-# Архитектура проекта
+Микросервисная система для взаимодействия с Large Language Models (LLM) через Telegram-бота с JWT-аутентификацией, очередями сообщений и асинхронной обработкой запросов.
 
-Проект состоит из двух независимых сервисов:
+---
 
-Auth Service (FastAPI), отвечает за:
-1. Регистрацию пользователей;
-2. Аутентификацию пользователей;
-3. Выдачу JWT-токенов;
-4. Получение информации о текущем пользователе.
+# Описание проекта
 
-Auth Service не зависит от Telegram и может использоваться любыми внешними клиентами.
+Система реализована в виде двух независимых микросервисов:
 
-Bot Service (Aiogram), отвечает за:
-1. Приём сообщений из Telegram;
-2. Проверку JWT-токена;
-3. Отправку запросов к LLM;
-4. Взаимодействие с RabbitMQ, Celery и Redis.
+## Auth Service
+
+Сервис авторизации, реализованный на FastAPI.
+
+Функциональность:
+
+* регистрация пользователей;
+* аутентификация пользователей;
+* выдача JWT-токенов;
+* получение информации о текущем пользователе;
+* защита API через JWT.
+
+Auth Service полностью независим от Telegram и может использоваться любыми внешними клиентами.
+
+---
+
+## Bot Service
+
+Telegram-бот, реализованный на Aiogram.
+
+Функциональность:
+
+* прием сообщений от пользователей Telegram;
+* сохранение JWT-токена пользователя;
+* проверка валидности JWT;
+* отправка запросов в очередь RabbitMQ;
+* обработка запросов через Celery Worker;
+* взаимодействие с LLM через OpenRouter API;
+* хранение временных данных в Redis.
 
 Bot Service не хранит пользователей и не обращается напрямую к базе данных Auth Service.
 
-## Технологии
-- Backend
-- Python 3.12
-- FastAPI
-- SQLAlchemy Async
-- SQLite
-- Pydantic
-- Pydantic Settings
+---
 
-## Безопасность
-- JWT
-- python-jose
-- Passlib
-- bcrypt
-
-## Telegram Bot
-- Aiogram 3
-- Очереди и фоновые задачи
-RabbitMQ
-Celery
-Redis
-
-## Тестирование
-- Pytest
-- Pytest Asyncio
-- HTTPX
-
-## Контейнеризация
-- Docker
-- Docker Compose
-
-
-## Структура проекта
+# Архитектура системы
 
 ```text
-llm_consultation_system/
-├── auth_service/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── core/
-│   │   │   ├── config.py
-│   │   │   ├── security.py
-│   │   │   └── exceptions.py
-│   │   ├── db/
-│   │   │   ├── base.py
-│   │   │   ├── session.py
-│   │   │   └── models.py
-│   │   ├── schemas/
-│   │   │   ├── auth.py
-│   │   │   └── user.py
-│   │   ├── repositories/
-│   │   │   └── users.py
-│   │   ├── usecases/
-│   │   │   └── auth.py
-│   │   └── api/
-│   │       ├── deps.py
-│   │       ├── routes_auth.py
-│   │       └── router.py
-│   ├── tests/
-│   │   └── ...
-│   ├── pyproject.toml
-│   ├── pytest.ini
-│   └── .env
-│
-├── bot_service/
-│   ├── app/
-│   │   ├── main.py
-│   │   ├── core/
-│   │   │   ├── config.py
-│   │   │   └── jwt.py
-│   │   ├── infra/
-│   │   │   ├── redis.py
-│   │   │   └── celery_app.py
-│   │   ├── tasks/
-│   │   │   └── llm_tasks.py
-│   │   ├── services/
-│   │   │   └── openrouter_client.py
-│   │   └── bot/
-│   │       ├── dispatcher.py
-│   │       └── handlers.py
-│   ├── tests/
-│   │   ├── conftest.py
-│   │   └── ...
-│   ├── pyproject.toml
-│   ├── pytest.ini
-│   └── .env
-│
-├── docker-compose.yml
-├── README.md
-└── screenshots/
-    ├── swagger_register.png
-    ├── swagger_login.png
-    ├── swagger_me.png
-    ├── telegram_bot.png
-    ├── rabbitmq.png
-    └── tests.png
-
-```
-
-
-
-
-Auth Service
-Основные маршруты
-Регистрация
-POST /auth/register
-
-Пример:
-
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-Логин
-POST /auth/login
-
-Используется OAuth2PasswordRequestForm.
-
-Пример:
-
-username=user@example.com
-password=password123
-
-Ответ:
-
-{
-  "access_token": "<jwt>",
-  "token_type": "bearer"
-}
-Информация о пользователе
-GET /auth/me
-
-Заголовок:
-
-Authorization: Bearer <jwt>
-JWT
-
-Токен содержит:
-
-{
-  "sub": "1",
-  "role": "user",
-  "iat": 1710000000,
-  "exp": 1710003600
-}
-
-Проверяется:
-
-подпись;
-срок действия;
-наличие sub;
-наличие role.
-Bot Service
-Пользовательский сценарий
-Пользователь регистрируется через Swagger Auth Service.
-Пользователь получает JWT.
-Пользователь отправляет боту:
-/token <jwt>
-Токен сохраняется в Redis.
-Пользователь отправляет запрос.
-Бот валидирует JWT.
-Бот публикует задачу в RabbitMQ.
-Celery Worker вызывает LLM.
-Ответ отправляется пользователю.
-RabbitMQ и Celery
-
-Архитектура обработки сообщений:
-
 Telegram User
       │
       ▼
-Telegram Bot
+Telegram Bot (Aiogram)
       │
       ▼
 RabbitMQ
@@ -205,98 +61,451 @@ OpenRouter API
       │
       ▼
 Telegram User
+```
 
-Преимущества:
+## Преимущества архитектуры
 
-неблокирующая обработка запросов;
-масштабируемость;
-устойчивость к нагрузке.
-Redis
+* асинхронная обработка запросов;
+* отсутствие блокировки Telegram-бота;
+* масштабируемость;
+* отказоустойчивость;
+* разделение ответственности между сервисами.
+
+---
+
+# Используемые технологии
+
+## Backend
+
+* Python 3.12
+* FastAPI
+* SQLAlchemy Async
+* SQLite
+* Pydantic
+* Pydantic Settings
+
+## Безопасность
+
+* JWT
+* python-jose
+* Passlib
+* bcrypt
+
+## Telegram
+
+* Aiogram 3
+
+## Очереди и фоновые задачи
+
+* RabbitMQ
+* Celery
+* Redis
+
+## Контейнеризация
+
+* Docker
+* Docker Compose
+
+## Тестирование
+
+* Pytest
+* Pytest Asyncio
+* HTTPX
+* RESPX
+* Fakeredis
+* Pytest Mock
+
+---
+
+# Структура проекта
+
+```text
+llm_consultation_system/
+│
+├── auth_service/
+│   ├── app/
+│   ├── tests/
+│   ├── pyproject.toml
+│   ├── pytest.ini
+│   └── .env
+│
+├── bot_service/
+│   ├── app/
+│   ├── tests/
+│   ├── pyproject.toml
+│   ├── pytest.ini
+│   └── .env
+│
+├── docker-compose.yml
+├── README.md
+└── screenshots/
+```
+
+---
+
+# Auth Service
+
+## Регистрация пользователя
+
+### Запрос
+
+```http
+POST /auth/register
+```
+
+```json
+{
+  "email": "user@example.com",
+  "password": "password123"
+}
+```
+
+---
+
+## Авторизация
+
+### Запрос
+
+```http
+POST /auth/login
+```
+
+Используется:
+
+```text
+OAuth2PasswordRequestForm
+```
+
+Пример данных:
+
+```text
+username=user@example.com
+password=password123
+```
+
+Ответ:
+
+```json
+{
+  "access_token": "<jwt>",
+  "token_type": "bearer"
+}
+```
+
+---
+
+## Получение текущего пользователя
+
+### Запрос
+
+```http
+GET /auth/me
+```
+
+Заголовок:
+
+```text
+Authorization: Bearer <jwt>
+```
+
+---
+
+# JWT
+
+Пример полезной нагрузки токена:
+
+```json
+{
+  "sub": "1",
+  "role": "user",
+  "iat": 1710000000,
+  "exp": 1710003600
+}
+```
+
+При проверке токена контролируются:
+
+* корректность подписи;
+* срок действия;
+* наличие поля `sub`;
+* наличие поля `role`.
+
+---
+
+# Bot Service
+
+## Пользовательский сценарий
+
+1. Пользователь регистрируется через Swagger Auth Service.
+2. Пользователь получает JWT-токен.
+3. В Telegram выполняет команду:
+
+```text
+/token <jwt>
+```
+
+4. JWT сохраняется в Redis.
+5. Пользователь отправляет запрос боту.
+6. Бот проверяет токен.
+7. Запрос отправляется в RabbitMQ.
+8. Celery Worker обрабатывает задачу.
+9. OpenRouter возвращает ответ LLM.
+10. Ответ отправляется пользователю в Telegram.
+
+---
+
+# Redis
 
 Redis используется для:
 
-хранения JWT пользователя;
-хранения промежуточных данных;
-backend Celery результатов.
-Запуск проекта
-Через Docker Compose
+* хранения JWT пользователей;
+* хранения промежуточных данных;
+* backend-хранилища результатов Celery.
 
-Сборка контейнеров:
+---
 
+# RabbitMQ и Celery
+
+Используются для организации очередей задач и асинхронного взаимодействия между компонентами системы.
+
+Преимущества:
+
+* неблокирующая обработка сообщений;
+* масштабируемость;
+* распределение нагрузки;
+* возможность обработки большого количества запросов.
+
+---
+
+# Запуск проекта
+
+## Сборка контейнеров
+
+```bash
 docker compose build
+```
 
-Запуск:
+## Запуск
 
+```bash
 docker compose up
+```
 
-Запуск в фоне:
+## Запуск в фоне
 
+```bash
 docker compose up -d
+```
 
-Остановка:
+## Остановка
 
+```bash
 docker compose down
-Swagger
+```
+
+---
+
+# Swagger UI
 
 После запуска Auth Service:
 
+```text
 http://localhost:8000/docs
-RabbitMQ Management
+```
+
+---
+
+# RabbitMQ Management
 
 После запуска:
 
+```text
 http://localhost:15672
+```
 
 Логин:
 
+```text
 guest
+```
 
 Пароль:
 
+```text
 guest
-Тестирование
-Запуск тестов
+```
 
-Из папки auth_service:
+---
 
+# Тестирование Auth Service
+
+## Запуск тестов
+
+Из директории `auth_service`:
+
+```bash
 pytest -v
-Реализованные тесты
-Модульные тесты
+```
 
-Проверяются:
+## Реализованные тесты
 
-создание хеша пароля;
-отличие хеша от исходного пароля;
-успешная проверка правильного пароля;
-отклонение неправильного пароля;
-создание JWT;
-наличие sub;
-наличие role;
-наличие iat;
-наличие exp.
-Интеграционные тесты
+### Модульные тесты
 
-Проверяются:
+Проверяют:
 
-регистрация пользователя;
-логин пользователя;
-получение JWT;
-доступ к /auth/me по JWT.
-Негативные тесты
+* создание хеша пароля;
+* отличие хеша от исходного пароля;
+* успешную проверку корректного пароля;
+* отклонение неверного пароля;
+* создание JWT;
+* наличие полей `sub`, `role`, `iat`, `exp`.
 
-Проверяются:
+### Интеграционные тесты
 
-повторная регистрация (409);
-неверный пароль (401);
-отсутствие токена (401);
-неверный токен (401).
-Результат тестирования
-=========================================
+Проверяют:
+
+* регистрацию пользователя;
+* авторизацию пользователя;
+* получение JWT;
+* доступ к `/auth/me`.
+
+### Негативные тесты
+
+Проверяют:
+
+* повторную регистрацию (409);
+* неверный пароль (401);
+* отсутствие токена (401);
+* невалидный токен (401).
+
+### Результат
+
+```text
+========================
 7 passed
-=========================================
+========================
+```
 
 Все тесты успешно пройдены.
 
-Автор
+---
 
-Проект выполнен в рамках учебного задания по разработке микросервисной платформы для взаимодействия с LLM через Telegram-бота с использованием FastAPI, RabbitMQ, Celery и Redis.
+# Тестирование Bot Service
+
+## Запуск тестов
+
+Из директории `bot_service`:
+
+```bash
+pytest -v
+```
+
+## Реализованные тесты
+
+Проверяются следующие компоненты:
+
+### JWT Validation
+
+* корректный JWT;
+* истекший JWT;
+* невалидный JWT.
+
+### Telegram Handlers
+
+* обработка команды `/start`;
+* сохранение JWT через `/token`;
+* обработка пользовательских сообщений.
+
+### Redis Integration
+
+* сохранение токенов;
+* получение токенов;
+* работа через `fakeredis`.
+
+### Celery Integration
+
+* постановка задач в очередь;
+* корректный вызов Celery-задач.
+
+### OpenRouter Integration
+
+* успешная обработка HTTP-запросов;
+* обработка ошибок внешнего API;
+* мокирование через RESPX.
+
+### Результат
+
+```text
+========================
+20 passed
+========================
+```
+
+Все тесты успешно пройдены.
+
+---
+
+# Дополнительно установленные зависимости для тестирования
+
+## Auth Service
+
+```bash
+pip install pytest
+pip install pytest-asyncio
+pip install httpx
+pip install python-multipart
+pip install pydantic[email]
+pip install python-jose[cryptography]
+pip install bcrypt==4.0.1
+```
+
+## Bot Service
+
+```bash
+pip install pytest pytest-asyncio pytest-mock
+pip install fakeredis celery
+pip install respx httpx
+pip install "python-jose[cryptography]"
+```
+
+---
+
+# Скриншоты
+
+Рекомендуется приложить:
+
+* Swagger Register
+* Swagger Login
+* Swagger Me
+* Telegram Bot
+* RabbitMQ Dashboard
+* Результаты тестирования Auth Service
+* Результаты тестирования Bot Service
+
+---
+
+# Итоги проекта
+
+В рамках проекта была разработана полноценная микросервисная система для взаимодействия с LLM через Telegram.
+
+Реализованы:
+
+* JWT-аутентификация пользователей;
+* регистрация и авторизация через FastAPI;
+* Telegram-бот на Aiogram;
+* асинхронная обработка запросов;
+* RabbitMQ + Celery;
+* Redis для хранения токенов и промежуточных данных;
+* интеграция с OpenRouter API;
+* модульное, интеграционное и негативное тестирование;
+* контейнеризация через Docker Compose.
+
+Все реализованные тесты успешно проходят:
+
+```text
+Auth Service: 7 passed
+Bot Service: 20 passed
+Итого: 27 passed
+```
+
+

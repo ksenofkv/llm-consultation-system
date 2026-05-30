@@ -49,10 +49,7 @@ async def token_handler(message: Message) -> None:
     parts = (message.text or "").split(maxsplit=1)
 
     if len(parts) != 2:
-        await message.answer(
-            "Передайте токен в формате:\n"
-            "/token <jwt>"
-        )
+        await message.answer("Передайте токен в формате:\n/token <jwt>")
         return
 
     token = parts[1].strip()
@@ -62,8 +59,7 @@ async def token_handler(message: Message) -> None:
 
     except ValueError:
         await message.answer(
-            "Токен неверный или истёк. "
-            "Получите новый токен в Auth Service."
+            "Токен неверный или истёк. Получите новый токен в Auth Service."
         )
         return
 
@@ -98,10 +94,7 @@ async def text_handler(message: Message) -> None:
     token = await redis.get(key)
 
     if not token:
-        await message.answer(
-            "Доступ запрещён. Сначала авторизуйтесь:\n"
-            "/token <jwt>"
-        )
+        await message.answer("Доступ запрещён. Сначала авторизуйтесь:\n/token <jwt>")
         return
 
     try:
@@ -120,6 +113,4 @@ async def text_handler(message: Message) -> None:
         prompt=message.text or "",
     )
 
-    await message.answer(
-        "Запрос принят. Ответ придёт после обработки."
-    )
+    await message.answer("Запрос принят. Ответ придёт после обработки.")

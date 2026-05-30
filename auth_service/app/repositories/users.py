@@ -46,9 +46,7 @@ class UsersRepository:
         - None
         """
 
-        query = select(User).where(
-            User.id == user_id
-        )
+        query = select(User).where(User.id == user_id)
 
         result = await self.db.execute(query)
 
@@ -63,9 +61,7 @@ class UsersRepository:
         - None
         """
 
-        query = select(User).where(
-            User.email == email
-        )
+        query = select(User).where(User.email == email)
 
         result = await self.db.execute(query)
 
