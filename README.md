@@ -145,96 +145,68 @@ llm_consultation_system/
 
 # Auth Service
 
-## Регистрация пользователя
+## 1.Swagger: регистрация пользователя
 
-### Запрос
+На скриншоте показан запрос POST /auth/register и ответ 201 Created.
 
-```http
-POST /auth/register
-```
+![screenshots](images/1_registration.png)
 
-```json
-{
-  "email": "user@example.com",
-  "password": "password123"
-}
-```
+## 2.Swagger: логин пользователя
 
----
+На скриншоте показан запрос POST /auth/login и получение JWT.
 
-## Авторизация
+![screenshots](images/2_user_login.png)
 
-### Запрос
+## 3.Swagger authorizations
 
-```http
-POST /auth/login
-```
+На скриншоте авторизация в Swagger.
 
-Используется:
+![screenshots](images/3_authorizations.png)
 
-```text
-OAuth2PasswordRequestForm
-```
+## 4.Swagger: текущий пользователь
 
-Пример данных:
+На скриншоте показан запрос GET /auth/me по JWT.
 
-```text
-username=user@example.com
-password=password123
-```
+![screenshots](images/4_current_user.png)
 
-Ответ:
+## 5.Swagger: Health Auth Service
 
-```json
-{
-  "access_token": "<jwt>",
-  "token_type": "bearer"
-}
-```
+![screenshots](images/5_Health_Auth Service.png)
 
----
+## 6.Telegram-бот
 
-## Получение текущего пользователя
+На скриншоте показан диалог с ботом:
 
-### Запрос
+- команда /token <jwt>;
+- сообщение, что токен сохранён;
+- обычный вопрос;
+- ответ от LLM. 
 
-```http
-GET /auth/me
-```
+![screenshots](images/6_Bot_LMM.png)
 
-Заголовок:
+## 7.RabbitMQ
 
-```text
-Authorization: Bearer <jwt>
-```
+На скриншотах видно, что RabbitMQ запущен и используются очереди Celery.
 
----
+![screenshots](images/7_RabbitMQ-1.png)
 
-# JWT
+![screenshots](images/7_RabbitMQ-2.png)
 
-Пример полезной нагрузки токена:
+![screenshots](images/7_RabbitMQ-3.png)
 
-```json
-{
-  "sub": "1",
-  "role": "user",
-  "iat": 1710000000,
-  "exp": 1710003600
-}
-```
+## 8.Тесты
 
-При проверке токена контролируются:
+На скриншоте показан успешный запуск тестов.
 
-* корректность подписи;
-* срок действия;
-* наличие поля `sub`;
-* наличие поля `role`.
+![screenshots](images/8_test_auth_service.png)
 
----
+![screenshots](images/8_test_bot_service.png)
 
-# Bot Service
+## 8.Ruff
 
-## Пользовательский сценарий
+![screenshots](images/9_test_ruff.png)
+
+# Пользовательский сценарий
 
 1. Пользователь регистрируется через Swagger Auth Service.
 2. Пользователь получает JWT-токен.
@@ -378,17 +350,11 @@ pytest -v
 * отсутствие токена (401);
 * невалидный токен (401).
 
+---
+
 ### Результат
 
-```text
-========================
-7 passed
-========================
-```
-
-Все тесты успешно пройдены.
-
----
+Все тесты успешно пройдены (см. выше скриншот).
 
 # Тестирование Bot Service
 
@@ -435,13 +401,7 @@ pytest -v
 
 ### Результат
 
-```text
-========================
-20 passed
-========================
-```
-
-Все тесты успешно пройдены.
+Все тесты успешно пройдены (см. выше скриншот).
 
 ---
 
@@ -468,22 +428,6 @@ pip install respx httpx
 pip install "python-jose[cryptography]"
 ```
 
----
-
-# Скриншоты
-
-Рекомендуется приложить:
-
-* Swagger Register
-* Swagger Login
-* Swagger Me
-* Telegram Bot
-* RabbitMQ Dashboard
-* Результаты тестирования Auth Service
-* Результаты тестирования Bot Service
-
----
-
 # Итоги проекта
 
 В рамках проекта была разработана полноценная микросервисная система для взаимодействия с LLM через Telegram.
@@ -500,12 +444,5 @@ pip install "python-jose[cryptography]"
 * модульное, интеграционное и негативное тестирование;
 * контейнеризация через Docker Compose.
 
-Все реализованные тесты успешно проходят:
-
-```text
-Auth Service: 7 passed
-Bot Service: 20 passed
-Итого: 27 passed
-```
 
 
