@@ -149,29 +149,29 @@ llm_consultation_system/
 
 На скриншоте показан запрос POST /auth/register и ответ 201 Created.
 
-![screenshots](images/1_registration.png)
+![screenshots](screenshots/1_registration.png)
 
 ## 2.Swagger: логин пользователя
 
 На скриншоте показан запрос POST /auth/login и получение JWT.
 
-![screenshots](images/2_user_login.png)
+![screenshots](screenshots/2_user_login.png)
 
 ## 3.Swagger authorizations
 
 На скриншоте авторизация в Swagger.
 
-![screenshots](images/3_authorizations.png)
+![screenshots](screenshots/3_authorizations.png)
 
 ## 4.Swagger: текущий пользователь
 
 На скриншоте показан запрос GET /auth/me по JWT.
 
-![screenshots](images/4_current_user.png)
+![screenshots](screenshots/4_current_user.png)
 
 ## 5.Swagger: Health Auth Service
 
-![screenshots](images/5_Health_Auth Service.png)
+![screenshots](screenshots/5_Health_Auth Service.png)
 
 ## 6.Telegram-бот
 
@@ -182,29 +182,29 @@ llm_consultation_system/
 - обычный вопрос;
 - ответ от LLM. 
 
-![screenshots](images/6_Bot_LMM.png)
+![screenshots](screenshots/6_Bot_LMM.png)
 
 ## 7.RabbitMQ
 
 На скриншотах видно, что RabbitMQ запущен и используются очереди Celery.
 
-![screenshots](images/7_RabbitMQ-1.png)
+![screenshots](screenshots/7_RabbitMQ-1.png)
 
-![screenshots](images/7_RabbitMQ-2.png)
+![screenshots](screenshots/7_RabbitMQ-2.png)
 
-![screenshots](images/7_RabbitMQ-3.png)
+![screenshots](screenshots/7_RabbitMQ-3.png)
 
 ## 8.Тесты
 
 На скриншоте показан успешный запуск тестов.
 
-![screenshots](images/8_test_auth_service.png)
+![screenshots](screenshots/8_test_auth_service.png)
 
-![screenshots](images/8_test_bot_service.png)
+![screenshots](screenshots/8_test_bot_service.png)
 
 ## 8.Ruff
 
-![screenshots](images/9_test_ruff.png)
+![screenshots](screenshots/9_test_ruff.png)
 
 # Пользовательский сценарий
 
@@ -443,6 +443,11 @@ pip install "python-jose[cryptography]"
 * интеграция с OpenRouter API;
 * модульное, интеграционное и негативное тестирование;
 * контейнеризация через Docker Compose.
+
+# Автор
+
+Ксенофонтов Константин Владимирович
+
 
 
 
