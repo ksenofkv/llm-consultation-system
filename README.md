@@ -254,7 +254,11 @@ cd llm-consultation-system
 
 ### 2. Настройка переменных окружения
 
-1. Заполни секреты:
+1. Создайте файлы .env :
+   - `auth_service/.env` 
+   - `bot_service/.env` 
+  
+1. Заполните секреты:
    - `auth_service/.env` — `JWT_SECRET` (общий с ботом).
    - `bot_service/.env` — `TELEGRAM_BOT_TOKEN`, `OPENROUTER_API_KEY`,
      `JWT_SECRET` (тот же, что у Auth Service).
@@ -268,11 +272,8 @@ cd llm-consultation-system
 ```bash
 docker compose up -d --build
 ```
-
 После успешного запуска будут доступны:
-
-* Auth Service — http://localhost:8000
-* Swagger UI — http://localhost:8000/docs
+* Открыть Swagger UI — http://localhost:8000/docs
 * RabbitMQ Management — http://localhost:15672
 
 ---
