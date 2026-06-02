@@ -233,11 +233,11 @@ llm/
 
 Перед началом работы необходимо:
 
-1. Установить Docker Compose версии 2.0 или выше:
+1. Установить и запустить Docker Compose версии 2.0 или выше:
 
    https://docs.docker.com/compose/install/
 
-2. Получить токен Telegram-бота через @BotFather.
+   2. Получить токен Telegram-бота через @BotFather.
 
 3. Зарегистрироваться на OpenRouter и получить API-ключ:
 
