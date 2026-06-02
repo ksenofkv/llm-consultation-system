@@ -254,19 +254,10 @@ cd llm-consultation-system
 
 ### 2. Настройка переменных окружения
 
-В корневой папке проекта создайте файл `.env`:
-
-```env
-TELEGRAM_BOT_TOKEN=<токен_вашего_бота>
-OPENROUTER_API_KEY=<ваш_API_ключ_OpenRouter>
-```
-
-Пример:
-
-```env
-TELEGRAM_BOT_TOKEN=123456789:AAExampleBotToken
-OPENROUTER_API_KEY=sk-or-v1-example-api-key
-```
+1. Заполни секреты:
+   - `auth_service/.env` — `JWT_SECRET` (общий с ботом).
+   - `bot_service/.env` — `TELEGRAM_BOT_TOKEN`, `OPENROUTER_API_KEY`,
+     `JWT_SECRET` (тот же, что у Auth Service).
 
 ---
 
@@ -286,25 +277,7 @@ docker compose up -d --build
 
 ---
 
-### 4. Запуск Telegram-бота
-
-Откройте новый терминал и перейдите в каталог Bot Service:
-
-```bash
-cd bot_service
-```
-
-Запустите обработку сообщений:
-
-```bash
-uv run python -m app.bot.run_polling
-```
-
-После запуска бот начнет принимать сообщения из Telegram.
-
----
-
-### 5. Регистрация пользователя
+### 4. Регистрация пользователя
 
 Откройте Swagger-интерфейс Auth Service:
 
@@ -334,7 +307,7 @@ POST /auth/register
 
 ---
 
-### 6. Авторизация
+### 5. Авторизация
 
 Выполните запрос:
 
@@ -346,7 +319,7 @@ POST /auth/login
 
 ---
 
-### 7. Проверка токена
+### 6. Проверка токена
 
 Для проверки токена выполните запрос:
 
@@ -358,7 +331,7 @@ GET /auth/me
 
 ---
 
-### 8. Подключение Telegram-бота
+### 7. Подключение Telegram-бота
 
 Откройте Telegram и найдите своего бота.
 
@@ -398,94 +371,6 @@ GET /auth/me
 4. Celery Worker обрабатывает задачу.
 5. OpenRouter генерирует ответ LLM.
 6. Ответ возвращается пользователю в Telegram.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
----
-
-# Запуск проекта
-
-Склонируйте репозиторий с помощью команды:
-```bash
-git clone https://github.com/ksenofkv/llm-consultation-system.git
-```
-Переход в папку проетка
-```bash
-cd llm-consultation-system
-```
-
-
-
-## Сборка контейнеров
-
-```bash
-docker compose build
-```
-
-## Запуск из корня проекта:
-
-```bash
-docker compose up
-```
-
-## Запуск в фоне
-
-```bash
-docker compose up -d
-```
-
-## Остановка
-
-```bash
-docker compose down
-```
-
----
-
-# Swagger UI
-
-После запуска Auth Service:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-# RabbitMQ Management
-
-После запуска:
-
-```text
-http://localhost:15672
-```
-
-Логин:
-
-```text
-guest
-```
-
-Пароль:
-
-```text
-guest
-```
 
 ---
 
@@ -594,7 +479,6 @@ Redis используется для:
 * возможность обработки большого количества запросов.
 
 ---
-
 
 # Тестирование Auth Service
 
