@@ -119,26 +119,181 @@ Telegram User
 
 # Структура проекта
 
+
 ```text
-llm_consultation_system/
-│
+llm/
 ├── auth_service/
 │   ├── app/
+│   │   ├── api/
+│   │   │   ├── deps.py
+│   │   │   ├── router.py
+│   │   │   └── routes_auth.py
+│   │   │
+│   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   ├── exceptions.py
+│   │   │   └── security.py
+│   │   │
+│   │   ├── db/
+│   │   │   ├── base.py
+│   │   │   ├── models.py
+│   │   │   └── session.py
+│   │   │
+│   │   ├── repositories/
+│   │   │   └── users.py
+│   │   │
+│   │   ├── schemas/
+│   │   │   ├── auth.py
+│   │   │   └── user.py
+│   │   │
+│   │   ├── usecases/
+│   │   │   └── auth.py
+│   │   │
+│   │   ├── __init__.py
+│   │   └── main.py
+│   │
 │   ├── tests/
+│   │   ├── conftest.py
+│   │   ├── test_auth_api.py
+│   │   ├── test_auth_negative.py
+│   │   └── test_security.py
+│   │
+│   ├── Dockerfile
 │   ├── pyproject.toml
 │   ├── pytest.ini
-│   └── .env
+│   └── uv.lock
 │
 ├── bot_service/
 │   ├── app/
+│   │   ├── api/
+│   │   │   └── router.py
+│   │   │
+│   │   ├── bot/
+│   │   │   ├── dispatcher.py
+│   │   │   ├── handlers.py
+│   │   │   └── run_polling.py
+│   │   │
+│   │   ├── core/
+│   │   │   ├── config.py
+│   │   │   └── jwt.py
+│   │   │
+│   │   ├── infra/
+│   │   │   ├── celery_app.py
+│   │   │   └── redis.py
+│   │   │
+│   │   ├── services/
+│   │   │   └── openrouter_client.py
+│   │   │
+│   │   ├── tasks/
+│   │   │   └── llm_tasks.py
+│   │   │
+│   │   ├── __init__.py
+│   │   └── main.py
+│   │
 │   ├── tests/
+│   │   ├── test_bot_handlers.py
+│   │   ├── test_jwt.py
+│   │   └── test_openrouter_client.py
+│   │
+│   ├── Dockerfile
 │   ├── pyproject.toml
-│   ├── pytest.ini
-│   └── .env
+│   └── uv.lock
+│
+├── screenshots/
+│   ├── 1_registration.png
+│   ├── 2_user_login.png
+│   ├── 3_authorizations.png
+│   ├── 4_current_user.png
+│   ├── 5_Health_Auth_Service.png
+│   ├── 6_Bot_LLM.png
+│   ├── 7_RabbitMQ-1.png
+│   ├── 7_RabbitMQ-2.png
+│   ├── 7_RabbitMQ-3.png
+│   ├── 8_test_auth_service.png
+│   ├── 8_test_bot_service.png
+│   └── 9_test_ruff.png
 │
 ├── docker-compose.yml
-├── README.md
-└── screenshots/
+├── pyproject.toml
+└── README.md
+```
+
+* Auth Service — сервис аутентификации и авторизации на FastAPI с JWT.
+* Bot Service — Telegram-бот на Aiogram для взаимодействия с LLM через OpenRouter.
+* RabbitMQ — брокер сообщений для асинхронной обработки запросов.
+* Celery — выполнение фоновых задач.
+* Redis — хранение токенов и результатов задач.
+* Docker Compose — оркестрация всех сервисов проекта.
+
+
+---
+
+# Запуск проекта
+
+## Сборка контейнеров
+
+```bash
+docker compose build
+```
+
+## Запуск
+
+Склонируйте репозиторий с помощью команды:
+```bash
+git clone https://github.com/ksenofkv/llm-consultation-system.git
+```
+Переход в папку проетка
+```bash
+cd llm-consultation-system
+```
+## Запуск из корня проекта:
+
+```bash
+docker compose up
+```
+
+## Запуск в фоне
+
+```bash
+docker compose up -d
+```
+
+## Остановка
+
+```bash
+docker compose down
+```
+
+---
+
+# Swagger UI
+
+После запуска Auth Service:
+
+```text
+http://localhost:8000/docs
+```
+
+---
+
+# RabbitMQ Management
+
+После запуска:
+
+```text
+http://localhost:15672
+```
+
+Логин:
+
+```text
+guest
+```
+
+Пароль:
+
+```text
+guest
 ```
 
 ---
@@ -171,7 +326,7 @@ llm_consultation_system/
 
 ## 5.Swagger: Health Auth Service
 
-![screenshots](screenshots/5_Health_Auth Service.png)
+![screenshots](screenshots/5_Health_Auth_Service.png)
 
 ## 6.Telegram-бот
 
@@ -249,65 +404,6 @@ Redis используется для:
 
 ---
 
-# Запуск проекта
-
-## Сборка контейнеров
-
-```bash
-docker compose build
-```
-
-## Запуск
-
-```bash
-docker compose up
-```
-
-## Запуск в фоне
-
-```bash
-docker compose up -d
-```
-
-## Остановка
-
-```bash
-docker compose down
-```
-
----
-
-# Swagger UI
-
-После запуска Auth Service:
-
-```text
-http://localhost:8000/docs
-```
-
----
-
-# RabbitMQ Management
-
-После запуска:
-
-```text
-http://localhost:15672
-```
-
-Логин:
-
-```text
-guest
-```
-
-Пароль:
-
-```text
-guest
-```
-
----
 
 # Тестирование Auth Service
 
