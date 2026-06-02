@@ -2,7 +2,6 @@ services:
   auth_service:
     build:
       context: ./auth_service
-    container_name: auth_service
     env_file: ./auth_service/.env
     ports:
       - "8000:8000"
@@ -11,7 +10,6 @@ services:
   bot_service:
     build:
       context: ./bot_service
-    container_name: bot_service
     env_file: ./bot_service/.env
     ports:
       - "8001:8000"
@@ -23,35 +21,17 @@ services:
   bot_polling:
     build:
       context: ./bot_service
-    container_name: bot_polling
     env_file: ./bot_service/.env
     command: python -m app.bot.run_polling
-    depends_on:
-      - redis
-      - rabbitmq
 
   celery_worker:
     build:
       context: ./bot_service
-    container_name: celery_worker
     env_file: ./bot_service/.env
     command: celery -A app.infra.celery_app.celery_app worker --loglevel=info
-    depends_on:
-      - rabbitmq
-      - redis
 
   rabbitmq:
     image: rabbitmq:3.11-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
 
   redis:
     image: redis:7-alpine
-    container_name: redis
-    ports:
-      - "6379:6379"
