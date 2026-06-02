@@ -226,17 +226,199 @@ llm/
 * Docker Compose — оркестрация всех сервисов проекта.
 
 
+
+## Установка и запуск системы
+
+### 1. Предварительные требования
+
+Перед началом работы необходимо:
+
+1. Установить Docker Compose версии 2.0 или выше:
+
+   https://docs.docker.com/compose/install/
+
+2. Получить токен Telegram-бота через @BotFather.
+
+3. Зарегистрироваться на OpenRouter и получить API-ключ:
+
+   https://openrouter.ai
+
+4. Клонировать репозиторий:
+
+```bash
+git clone https://github.com/ksenofkv/llm-consultation-system.git
+cd llm-consultation-system
+```
+
+---
+
+### 2. Настройка переменных окружения
+
+В корневой папке проекта создайте файл `.env`:
+
+```env
+TELEGRAM_BOT_TOKEN=<токен_вашего_бота>
+OPENROUTER_API_KEY=<ваш_API_ключ_OpenRouter>
+```
+
+Пример:
+
+```env
+TELEGRAM_BOT_TOKEN=123456789:AAExampleBotToken
+OPENROUTER_API_KEY=sk-or-v1-example-api-key
+```
+
+---
+
+### 3. Сборка и запуск сервисов
+
+Соберите и запустите все контейнеры:
+
+```bash
+docker compose up -d --build
+```
+
+После успешного запуска будут доступны:
+
+* Auth Service — http://localhost:8000
+* Swagger UI — http://localhost:8000/docs
+* RabbitMQ Management — http://localhost:15672
+
+---
+
+### 4. Запуск Telegram-бота
+
+Откройте новый терминал и перейдите в каталог Bot Service:
+
+```bash
+cd bot_service
+```
+
+Запустите обработку сообщений:
+
+```bash
+uv run python -m app.bot.run_polling
+```
+
+После запуска бот начнет принимать сообщения из Telegram.
+
+---
+
+### 5. Регистрация пользователя
+
+Откройте Swagger-интерфейс Auth Service:
+
+```text
+http://localhost:8000/docs
+```
+
+Выполните запрос:
+
+```http
+POST /auth/register
+```
+
+Пример тела запроса:
+
+```json
+{
+  "email": "student_surname@email.com",
+  "password": "mypassword"
+}
+```
+
+где:
+
+* `student_surname` — ваша фамилия латиницей;
+* `mypassword` — ваш пароль.
+
+---
+
+### 6. Авторизация
+
+Выполните запрос:
+
+```http
+POST /auth/login
+```
+
+После успешной авторизации сервис вернет JWT-токен доступа.
+
+---
+
+### 7. Проверка токена
+
+Для проверки токена выполните запрос:
+
+```http
+GET /auth/me
+```
+
+с использованием полученного JWT-токена.
+
+---
+
+### 8. Подключение Telegram-бота
+
+Откройте Telegram и найдите своего бота.
+
+Отправьте команду:
+
+```text
+/start
+```
+
+Бот запросит токен доступа.
+
+Отправьте токен командой:
+
+```text
+/token <JWT-токен>
+```
+
+Например:
+
+```text
+/token eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+```
+
+После успешной проверки токен будет сохранен, и бот предоставит доступ к OpenRouter.
+
+---
+
+### 9. Использование системы
+
+После авторизации можно отправлять боту любые текстовые запросы.
+
+Схема работы системы:
+
+1. Пользователь отправляет сообщение Telegram-боту.
+2. Бот проверяет JWT-токен пользователя.
+3. Запрос отправляется в очередь RabbitMQ.
+4. Celery Worker обрабатывает задачу.
+5. OpenRouter генерирует ответ LLM.
+6. Ответ возвращается пользователю в Telegram.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 ---
 
 # Запуск проекта
-
-## Сборка контейнеров
-
-```bash
-docker compose build
-```
-
-## Запуск
 
 Склонируйте репозиторий с помощью команды:
 ```bash
@@ -246,6 +428,15 @@ git clone https://github.com/ksenofkv/llm-consultation-system.git
 ```bash
 cd llm-consultation-system
 ```
+
+
+
+## Сборка контейнеров
+
+```bash
+docker compose build
+```
+
 ## Запуск из корня проекта:
 
 ```bash
