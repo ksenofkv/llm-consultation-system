@@ -237,7 +237,7 @@ llm/
 
    https://docs.docker.com/compose/install/
 
-   2. Получить токен Telegram-бота через @BotFather.
+2. Получить токен Telegram-бота через @BotFather.
 
 3. Зарегистрироваться на OpenRouter и получить API-ключ:
 
