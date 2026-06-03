@@ -17,10 +17,9 @@ app.bot.handlers.get_redis
 реальный redis:6379.
 """
 
-import pytest
-
 # Fake Redis для тестов
 import fakeredis.aioredis
+import pytest
 
 # Модуль handlers, где используется get_redis
 import app.bot.handlers as handlers_module

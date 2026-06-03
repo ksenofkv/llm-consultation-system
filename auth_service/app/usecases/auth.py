@@ -19,17 +19,16 @@ Usecase-слой Auth Service.
 # - хеширование пароля
 # - проверка пароля
 # - создание JWT
-from app.core.security import (
-    create_access_token,
-    hash_password,
-    verify_password,
-)
-
 # Кастомные исключения приложения
 from app.core.exceptions import (
     InvalidCredentialsError,
     UserAlreadyExistsError,
     UserNotFoundError,
+)
+from app.core.security import (
+    create_access_token,
+    hash_password,
+    verify_password,
 )
 
 # Репозиторий пользователей

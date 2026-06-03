@@ -21,7 +21,6 @@ from celery import Celery
 # Настройки приложения
 from app.core.config import settings
 
-
 # Создание Celery приложения
 celery_app = Celery(
     # Имя приложения

@@ -20,11 +20,11 @@ import asyncio
 # Telegram Bot из aiogram
 from aiogram import Bot
 
-# Celery-приложение
-from app.infra.celery_app import celery_app
-
 # Настройки приложения
 from app.core.config import settings
+
+# Celery-приложение
+from app.infra.celery_app import celery_app
 
 # Клиент OpenRouter
 from app.services.openrouter_client import call_openrouter

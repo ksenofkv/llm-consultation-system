@@ -24,7 +24,6 @@ from sqlalchemy.ext.asyncio import (
 # Глобальные настройки приложения
 from app.core.config import settings
 
-
 # Формирование DATABASE_URL для SQLite
 DATABASE_URL = f"sqlite+aiosqlite:///{settings.sqlite_path}"
 

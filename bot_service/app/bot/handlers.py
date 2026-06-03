@@ -30,7 +30,6 @@ from app.infra.redis import get_redis
 # Celery-задача LLM
 from app.tasks.llm_tasks import llm_request
 
-
 # Router для Telegram handlers
 router = Router()
 

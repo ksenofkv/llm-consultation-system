@@ -1,7 +1,6 @@
 import httpx
 import pytest
 import respx
-
 from app.services.openrouter_client import call_openrouter
 
 

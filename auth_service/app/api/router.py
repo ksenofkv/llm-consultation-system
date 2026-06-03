@@ -20,7 +20,6 @@ from fastapi import APIRouter
 # Router auth endpoint-ов
 from app.api.routes_auth import router as auth_router
 
-
 # Общий router приложения
 router = APIRouter()
 

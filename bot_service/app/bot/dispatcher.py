@@ -17,9 +17,8 @@
 
 from aiogram import Bot, Dispatcher
 
-from app.core.config import settings
 from app.bot.handlers import router
-
+from app.core.config import settings
 
 # Создание Telegram Bot
 bot = Bot(token=settings.telegram_bot_token)

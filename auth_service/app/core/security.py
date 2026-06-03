@@ -15,14 +15,13 @@
 - содержит бизнес-логику регистрации или логина
 """
 
-from datetime import datetime, timedelta, timezone
+from datetime import UTC, datetime, timedelta
 from typing import Any
 
-from jose import JWTError, ExpiredSignatureError, jwt
+from jose import ExpiredSignatureError, JWTError, jwt
 from passlib.context import CryptContext
 
 from app.core.config import settings
-
 
 # Настройка bcrypt для хеширования паролей
 pwd_context = CryptContext(
@@ -69,7 +68,7 @@ def create_access_token(
     - exp: время истечения токена
     """
 
-    now = datetime.now(timezone.utc)
+    now = datetime.now(UTC)
 
     if expires_delta is None:
         expires_delta = timedelta(minutes=settings.access_token_expire_minutes)

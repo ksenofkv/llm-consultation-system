@@ -27,17 +27,15 @@ from app.api.deps import (
     get_current_user,
 )
 
-# UseCase авторизации
-from app.usecases.auth import AuthUseCase
-
 # Pydantic схемы
 from app.schemas.auth import (
     RegisterRequest,
     TokenResponse,
 )
-
 from app.schemas.user import UserPublic
 
+# UseCase авторизации
+from app.usecases.auth import AuthUseCase
 
 # Router Auth Service
 router = APIRouter(

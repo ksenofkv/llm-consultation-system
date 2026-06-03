@@ -1,5 +1,5 @@
-import pytest
 import fakeredis.aioredis
+import pytest
 
 
 class FakeUser:

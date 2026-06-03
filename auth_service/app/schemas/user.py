@@ -17,10 +17,8 @@ Pydantic-схемы пользователя Auth Service.
 from datetime import datetime
 
 # Базовая схема Pydantic
-from pydantic import BaseModel, EmailStr
-
 # Настройки совместимости с ORM
-from pydantic import ConfigDict
+from pydantic import BaseModel, ConfigDict, EmailStr
 
 
 class UserPublic(BaseModel):

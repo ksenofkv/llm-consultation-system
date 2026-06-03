@@ -25,23 +25,11 @@ from fastapi import Depends
 # OAuth2 Bearer token
 from fastapi.security import OAuth2PasswordBearer
 
-# AsyncSession SQLAlchemy
-from sqlalchemy.ext.asyncio import AsyncSession
-
 # JWT decode
 from jose import ExpiredSignatureError, JWTError
 
-# Engine session factory
-from app.db.session import AsyncSessionLocal
-
-# Репозиторий пользователей
-from app.repositories.users import UsersRepository
-
-# UseCase авторизации
-from app.usecases.auth import AuthUseCase
-
-# Security decode
-from app.core.security import decode_token
+# AsyncSession SQLAlchemy
+from sqlalchemy.ext.asyncio import AsyncSession
 
 # Исключения приложения
 from app.core.exceptions import (
@@ -50,9 +38,20 @@ from app.core.exceptions import (
     UserNotFoundError,
 )
 
+# Security decode
+from app.core.security import decode_token
+
+# Engine session factory
+from app.db.session import AsyncSessionLocal
+
+# Репозиторий пользователей
+from app.repositories.users import UsersRepository
+
 # Pydantic схема пользователя
 from app.schemas.user import UserPublic
 
+# UseCase авторизации
+from app.usecases.auth import AuthUseCase
 
 # OAuth2 схема получения Bearer token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")

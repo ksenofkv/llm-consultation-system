@@ -15,7 +15,6 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
-
 # Общие маршруты (например /health)
 from app.core.config import settings
 

@@ -1,8 +1,7 @@
 import pytest
-from jose import jwt
-
 from app.core.config import settings
 from app.core.jwt import decode_and_validate
+from jose import jwt
 
 
 @pytest.fixture
