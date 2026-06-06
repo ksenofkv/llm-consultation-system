@@ -78,6 +78,53 @@ flowchart LR
     BOT --> U
 ```
 
+```mermaid
+flowchart LR
+
+    subgraph AUTH["Authentication Service"]
+        SW["Swagger<br/>curl<br/>REST API"]
+
+        AUTH_API["Auth Service<br/>FastAPI"]
+
+        DB[("SQLite<br/>PostgreSQL")]
+
+        SW -->|"Register<br/>Login<br/>Me"| AUTH_API
+        AUTH_API --> DB
+    end
+
+    subgraph BOT["Telegram Bot Service"]
+        USER["Telegram<br/>User"]
+
+        BOT_APP["Aiogram<br/>Bot"]
+
+        HANDLERS["Bot Service<br/>Handlers"]
+
+        REDIS[("Redis<br/>token:chat_id")]
+
+        USER --> BOT_APP
+        BOT_APP -->|"JWT"| HANDLERS
+        HANDLERS <-->|"Check Token"| REDIS
+    end
+
+    subgraph ASYNC["Asynchronous Processing"]
+        RMQ[("RabbitMQ")]
+
+        CELERY["Celery<br/>Worker"]
+
+        OPENR["OpenRouter<br/>LLM API"]
+
+        RMQ -->|"Consume"| CELERY
+        CELERY --> OPENR
+    end
+
+    AUTH_API -->|"JWT Token"| BOT_APP
+
+    HANDLERS -->|"Publish Task"| RMQ
+
+    CELERY -->|"LLM Response"| BOT_APP
+
+    BOT_APP -->|"Answer"| USER
+```
 
 ## Преимущества архитектуры
 
