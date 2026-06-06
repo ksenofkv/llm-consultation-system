@@ -46,40 +46,6 @@ Bot Service не хранит пользователей и не обращае�
 
 ```mermaid
 flowchart LR
-    %% Пользователь
-    U[Telegram User] 
-
-    %% Swagger / curl -> Auth Service
-    SW[Swagger or curl] 
-    AUTH[Auth Service FastAPI] 
-    DB[SQLite or Postgres]
-
-    %% Bot Service и очередь
-    BOT[aiogram Bot] 
-    HANDLERS[Bot Service Handlers] 
-    REDIS[Redis token:id] 
-    RMQ[RabbitMQ] 
-    CELERY[Celery Worker] 
-    OPENR[OpenRouter API]
-
-    %% Поток регистрации и логина
-    SW -->|POST /auth/register\nPOST /auth/login\nGET /auth/me| AUTH
-    AUTH --> DB
-    AUTH -->|JWT| BOT
-
-    %% Основной поток сообщений
-    U --> BOT
-    BOT --> HANDLERS
-    HANDLERS --> REDIS
-    HANDLERS -->|publish task| RMQ
-    RMQ -->|consume task| CELERY
-    CELERY --> OPENR
-    CELERY -->|send answer| BOT
-    BOT --> U
-```
-
-```mermaid
-flowchart LR
 
     subgraph AUTH["Authentication Service"]
         SW["Swagger<br/>curl<br/>REST API"]
