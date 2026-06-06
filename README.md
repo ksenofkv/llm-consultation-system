@@ -44,24 +44,59 @@ Bot Service не хранит пользователей и не обращае�
 
 # Архитектура системы
 
-```text
-Telegram User
-      │
-      ▼
-Telegram Bot (Aiogram)
-      │
-      ▼
-RabbitMQ
-      │
-      ▼
-Celery Worker
-      │
-      ▼
-OpenRouter API
-      │
-      ▼
-Telegram User
+```mermaid
+flowchart LR
+    %% Пользователь
+    U[Telegram User] 
+
+    %% Swagger / curl -> Auth Service
+    SW[Swagger / curl] 
+    AUTH[Auth Service (FastAPI)] 
+    DB[(SQLite/Postgres)]
+
+    %% Bot Service и очередь
+    BOT[aiogram Bot] 
+    HANDLERS[Bot Service Handlers] 
+    REDIS[(Redis: token:<id>)] 
+    RMQ[(RabbitMQ)] 
+    CELERY[Celery Worker] 
+    OPENR[OpenRouter API]
+
+    %% Поток регистрации и логина
+    SW -->|POST /auth/register<br>POST /auth/login<br>GET /auth/me| AUTH
+    AUTH --> DB
+    AUTH -->|JWT| BOT
+
+    %% Основной поток сообщений
+    U --> BOT
+    BOT --> HANDLERS
+    HANDLERS --> REDIS
+    HANDLERS -->|publish task| RMQ
+    RMQ -->|consume task| CELERY
+    CELERY --> OPENR
+    CELERY -->|send answer| BOT
+    BOT --> U
+
+    %% Горизонтальное выравнивание
+    subgraph AUTH_BLOCK[" "]
+        SW
+        AUTH
+        DB
+    end
+
+    subgraph BOT_BLOCK[" "]
+        BOT
+        HANDLERS
+        REDIS
+    end
+
+    subgraph WORK_BLOCK[" "]
+        RMQ
+        CELERY
+        OPENR
+    end
 ```
+
 
 ## Преимущества архитектуры
 
@@ -227,7 +262,7 @@ llm/
 
 
 
-## Установка и запуск системы
+## Установка и запуск системы. Пользовательский сценарий
 
 ### 1. Предварительные требования
 
@@ -254,7 +289,7 @@ cd llm-consultation-system
 
 ### 2. Настройка переменных окружения
 
-1. Создайте файлы .env :
+1. Создайте файлы .env (пример приведен в файле .env.example) :
    - `auth_service/.env` 
    - `bot_service/.env` 
   
@@ -375,7 +410,7 @@ GET /auth/me
 
 ---
 
-# Auth Service
+# Демострация работы
 
 ## 1.Swagger: регистрация пользователя
 
@@ -438,23 +473,6 @@ GET /auth/me
 
 ![screenshots](screenshots/9_test_ruff.png)
 
-# Пользовательский сценарий
-
-1. Пользователь регистрируется через Swagger Auth Service.
-2. Пользователь получает JWT-токен.
-3. В Telegram выполняет команду:
-
-```text
-/token <jwt>
-```
-
-4. JWT сохраняется в Redis.
-5. Пользователь отправляет запрос боту.
-6. Бот проверяет токен.
-7. Запрос отправляется в RabbitMQ.
-8. Celery Worker обрабатывает задачу.
-9. OpenRouter возвращает ответ LLM.
-10. Ответ отправляется пользователю в Telegram.
 
 ---
 
@@ -618,7 +636,7 @@ pip install "python-jose[cryptography]"
 
 # Автор
 
-Ксенофонтов Константин Владимирович
+Ксенофонтов Константин Владимирович (М25-555)
 
 
 
