@@ -298,7 +298,7 @@ docker compose up -d --build
 ```
 После успешного запуска будут доступны:
 * Открыть Swagger UI — http://localhost:8000/docs
-* RabbitMQ Management — http://localhost:15672
+* RabbitMQ Management (Логин (Username): guest, Пароль (Password): guest ) — http://localhost:15672
 
 ---
 
