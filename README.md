@@ -50,20 +50,20 @@ flowchart LR
     U[Telegram User] 
 
     %% Swagger / curl -> Auth Service
-    SW[Swagger / curl] 
-    AUTH[Auth Service (FastAPI)] 
-    DB[(SQLite/Postgres)]
+    SW[Swagger or curl] 
+    AUTH[Auth Service FastAPI] 
+    DB[SQLite or Postgres]
 
     %% Bot Service и очередь
     BOT[aiogram Bot] 
     HANDLERS[Bot Service Handlers] 
-    REDIS[(Redis: token:<id>)] 
-    RMQ[(RabbitMQ)] 
+    REDIS[Redis token:id] 
+    RMQ[RabbitMQ] 
     CELERY[Celery Worker] 
     OPENR[OpenRouter API]
 
     %% Поток регистрации и логина
-    SW -->|POST /auth/register<br>POST /auth/login<br>GET /auth/me| AUTH
+    SW -->|POST /auth/register\nPOST /auth/login\nGET /auth/me| AUTH
     AUTH --> DB
     AUTH -->|JWT| BOT
 
@@ -76,25 +76,6 @@ flowchart LR
     CELERY --> OPENR
     CELERY -->|send answer| BOT
     BOT --> U
-
-    %% Горизонтальное выравнивание
-    subgraph AUTH_BLOCK[" "]
-        SW
-        AUTH
-        DB
-    end
-
-    subgraph BOT_BLOCK[" "]
-        BOT
-        HANDLERS
-        REDIS
-    end
-
-    subgraph WORK_BLOCK[" "]
-        RMQ
-        CELERY
-        OPENR
-    end
 ```
 
 
